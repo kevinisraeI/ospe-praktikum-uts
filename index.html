@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OSPE Praktikum UTS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Spectral:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: header bertab + satu kolom konten (maks 1100px). Palet diambil dari pewarnaan H&E: hematoksilin (ungu) & eosin (merah muda). */
+:root {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --ink: #1c2230;
+  --muted: #5a6273;
+  --line: #dde1e9;
+  --accent: #55388f;
+  --accent-soft: #ece7f6;
+  --eosin: #d23f76;
+  --eosin-soft: #fbe6ee;
+  --good: #1d7f55;
+  --good-soft: #e1f3ea;
+  --warn: #9a6512;
+  --warn-soft: #fbf0dc;
+  --bad: #b8352a;
+  --bad-soft: #fbe5e2;
+  --mask: #f3e6a6;
+  --mask-ink: #3b2f00;
+  --font-display: "Spectral", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12141a; --surface: #1b1f29; --ink: #e7eaf2; --muted: #a1a9b9; --line: #2d3342;
+    --accent: #b09af2; --accent-soft: #2b2540; --eosin: #ff7dab; --eosin-soft: #3a2230;
+    --good: #52c793; --good-soft: #17322a; --warn: #e3ac4f; --warn-soft: #3a2d16; --bad: #ff7b6e; --bad-soft: #3c1f1c;
+    --mask: #e9d98b; --mask-ink: #2b2200; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12141a; --surface: #1b1f29; --ink: #e7eaf2; --muted: #a1a9b9; --line: #2d3342;
+  --accent: #b09af2; --accent-soft: #2b2540; --eosin: #ff7dab; --eosin-soft: #3a2230;
+  --good: #52c793; --good-soft: #17322a; --warn: #e3ac4f; --warn-soft: #3a2d16; --bad: #ff7b6e; --bad-soft: #3c1f1c;
+  --mask: #e9d98b; --mask-ink: #2b2200; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--font-body); }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: 1.9rem; font-weight: 700; }
+h2 { font-size: 1.45rem; font-weight: 600; }
+h3 { font-size: 1.12rem; font-weight: 600; margin-top: 1.4rem; margin-bottom: .45rem; }
+a { color: var(--accent); }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--eosin); outline-offset: 2px; }
+img { max-width: 100%; display: block; }
+
+header.top { position: sticky; top: 0; z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1100px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; white-space: nowrap; }
+.brand small { font-family: var(--font-body); font-weight: 500; font-size: .78rem; color: var(--muted); }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; flex: 1; scrollbar-width: none; }
+nav.tabs a { text-decoration: none; color: var(--muted); padding: 7px 12px; border-radius: 8px; font-weight: 500; font-size: .95rem; white-space: nowrap; }
+nav.tabs a.on { background: var(--accent-soft); color: var(--accent); }
+main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 80px; }
+
+.lead { color: var(--muted); max-width: 65ch; margin: .4rem 0 0; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.grid { display: grid; gap: 14px; }
+.g-cards { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 9px 16px; border-radius: 9px; font-weight: 500; }
+.btn:hover { border-color: var(--accent); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn.big { padding: 13px 20px; font-size: 1.02rem; }
+.btn.sm { padding: 5px 11px; font-size: .88rem; }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .45; cursor: default; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 6px 12px; border-radius: 999px; font-size: .9rem; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.tag { display: inline-block; font-size: .75rem; font-weight: 600; letter-spacing: .02em; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.tag.eo { background: var(--eosin-soft); color: var(--eosin); }
+.muted { color: var(--muted); }
+.small { font-size: .88rem; }
+.hero { display: grid; gap: 18px; grid-template-columns: 1.4fr 1fr; align-items: start; margin-bottom: 22px; }
+@media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+.rules { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.rules li { display: grid; grid-template-columns: 2.2rem 1fr; gap: 8px; align-items: start; }
+.rules b.n { font-family: var(--font-mono); color: var(--eosin); font-size: 1.05rem; }
+.mcard { cursor: pointer; display: grid; gap: 6px; text-align: left; }
+.mcard:hover { border-color: var(--accent); }
+.mcard .no { font-family: var(--font-display); font-weight: 700; color: var(--eosin); font-size: 1rem; }
+.mcard h3 { margin: 0; font-size: 1.08rem; }
+.bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--good); }
+.prio { font-size: .72rem; font-weight: 600; color: var(--warn); }
+
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); color: var(--muted); padding: 7px 13px; font-weight: 500; }
+.seg button.on { background: var(--accent); color: var(--surface); }
+.subtabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 6px; }
+
+.summary { max-width: 78ch; }
+.summary table { border-collapse: collapse; width: 100%; margin: .5rem 0 1rem; font-size: .93rem; }
+.summary th, .summary td { border: 1px solid var(--line); padding: 7px 9px; vertical-align: top; text-align: left; }
+.summary th { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.summary .tblwrap { overflow-x: auto; }
+.summary ul, .summary ol { padding-left: 1.3rem; }
+.summary li { margin: .25rem 0; }
+.warn { background: var(--bad-soft); border-left: 4px solid var(--bad); padding: 9px 12px; border-radius: 6px; font-size: .93rem; }
+.tip { background: var(--good-soft); border-left: 4px solid var(--good); padding: 9px 12px; border-radius: 6px; font-size: .93rem; }
+
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.thumb { position: relative; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); padding: 0; text-align: left; }
+.thumb img { width: 100%; aspect-ratio: 4/3; object-fit: contain; background: #fff; }
+.thumb span { position: absolute; left: 6px; top: 6px; font: 600 .72rem var(--font-mono); background: var(--surface); color: var(--ink); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--line); }
+.thumb em { position: absolute; right: 6px; top: 6px; font-style: normal; font-size: .7rem; font-weight: 600; background: var(--eosin); color: #fff; padding: 1px 6px; border-radius: 5px; }
+
+.fig { position: relative; width: 100%; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.fig img { width: 100%; height: auto; }
+.mk { position: absolute; border: 1px solid #b59b2a; background: var(--mask); color: var(--mask-ink); font: 600 11px/1 var(--font-mono); display: flex; align-items: center; justify-content: flex-start; padding: 0 3px; border-radius: 3px; min-width: 16px; min-height: 12px; overflow: hidden; cursor: pointer; }
+.mk.plain { background: #e9e9ee; border-color: #c4c4cc; color: transparent; cursor: default; }
+.mk.tg { background: var(--eosin); border-color: var(--eosin); color: #fff; box-shadow: 0 0 0 3px var(--eosin-soft); }
+.mk.open { background: transparent; color: transparent; border: 2px solid var(--eosin); }
+.mk.open.tg { box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--eosin); }
+.zoomwrap { overflow: auto; border-radius: 8px; }
+.zoomwrap.z2 .fig { width: 190%; }
+
+.quiz { display: grid; gap: 14px; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr); align-items: start; }
+.quiz.noimg { grid-template-columns: minmax(0, 720px); }
+@media (max-width: 860px) { .quiz { grid-template-columns: 1fr; } }
+.qhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.qtext { font-size: 1.12rem; font-weight: 500; margin: 6px 0 12px; }
+.ans { width: 100%; font: inherit; font-size: 1.05rem; padding: 11px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); color: var(--ink); }
+.ans:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.verdict { border-radius: 10px; padding: 12px 14px; display: grid; gap: 6px; }
+.verdict.benar { background: var(--good-soft); }
+.verdict.hampir { background: var(--warn-soft); }
+.verdict.salah, .verdict.kosong { background: var(--bad-soft); }
+.verdict .vt { font-weight: 700; }
+.verdict.benar .vt { color: var(--good); }
+.verdict.hampir .vt { color: var(--warn); }
+.verdict.salah .vt, .verdict.kosong .vt { color: var(--bad); }
+.key { font-weight: 600; font-size: 1.05rem; }
+.timer { font: 600 1.5rem var(--font-mono); font-variant-numeric: tabular-nums; }
+.timer.low { color: var(--bad); }
+.tbar { height: 5px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+.tbar > i { display: block; height: 100%; background: var(--eosin); transition: width 1s linear; }
+@media (prefers-reduced-motion: reduce) { .tbar > i { transition: none; } }
+.review { display: grid; gap: 10px; }
+.rv { display: grid; grid-template-columns: 2.2rem 110px 1fr auto; gap: 12px; align-items: start; }
+@media (max-width: 640px) { .rv { grid-template-columns: 2rem 1fr; } .rv .rvimg { display: none; } .rv .rvbtn { grid-column: 2; } }
+.rv .rvn { font: 600 1rem var(--font-mono); color: var(--muted); }
+.rv .rvimg img { border-radius: 6px; border: 1px solid var(--line); }
+.score { font: 700 2.6rem var(--font-display); }
+details.qa { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 10px 14px; }
+details.qa summary { cursor: pointer; font-weight: 500; }
+details.qa .a { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.list { display: grid; gap: 8px; }
+.pastgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.modal { position: fixed; inset: 0; background: rgba(10, 12, 18, .72); z-index: 50; display: flex; align-items: flex-start; justify-content: center; overflow: auto; padding: 18px 12px; }
+.modal .box { background: var(--surface); border-radius: 12px; width: min(1180px, 100%); padding: 14px; display: grid; gap: 10px; }
+.empty { padding: 30px; text-align: center; color: var(--muted); }
+kbd { font: 500 .8rem var(--font-mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--bg); }
+.setup { display: grid; gap: 16px; }
+.setup .lbl { font-weight: 600; margin-bottom: 6px; display: block; }
+.note { font-size: .85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">OSPE Praktikum UTS <small>8 materi · FK UISU</small></div>
+    <nav class="tabs" id="tabs">
+      <a href="#beranda" data-r="beranda">Beranda</a>
+      <a href="#pelajari" data-r="pelajari">Pelajari</a>
+      <a href="#latihan" data-r="latihan">Latihan</a>
+      <a href="#simulasi" data-r="simulasi">Simulasi OSPE</a>
+      <a href="#tahun-lalu" data-r="tahun-lalu">Soal Tahun Lalu</a>
+    </nav>
+  </div>
+</header>
+<main id="app"></main>
+<div id="modal"></div>
+<script src="content.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
