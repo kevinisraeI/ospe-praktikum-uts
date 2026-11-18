@@ -21,6 +21,7 @@ Fitur:
 - **Latihan**: soal tunjuk label, soal gambar "apa ini?", soal konsep, dan soal tahun lalu. Ada dua mode: ketik (dicek otomatis) atau buka jawaban (nilai sendiri). Soal yang salah lebih sering muncul lagi.
 - **Simulasi OSPE**: 25 soal acak × 60 detik, dengan mode kertas untuk latihan tulis tangan.
 - **Soal Tahun Lalu**: UTS 2025 dan UTS 21, kunci sudah dicek ke slide.
+- **Foto preparat**: 20 foto preparat histologi muskuloskeletal dari praktikum, dengan ciri pembeda tiap jaringan. Foto ini juga dipakai sebagai soal "Preparat apa ini?".
 
 ## Cara membuka
 

@@ -24,7 +24,8 @@ Object.keys(G.IDL).forEach(function (s) {
     if (l.a) add({ id: 'i-' + s + '-' + i, type: 'id', m: m, slide: s, li: i, q: 'Sebutkan nama struktur yang ditunjuk nomor ' + (i + 1) + ' (kotak merah muda).', a: l.t, al: [l.t], lenient: true });
   });
 });
-var TYPES = { id: 'Tunjuk label slide', img: 'Gambar: apa ini?', leg: 'Nomor pada gambar', konsep: 'Konsep (isian)', past: 'Soal tahun lalu' };
+(window.PREP || []).forEach(function (p, i) { add({ id: 'f-' + p.f, type: 'prep', m: 'm7', q: 'Foto preparat praktikum: jaringan/preparat apa yang tampak?', a: p.a, al: p.al, k: p.k, x: p.x, pimg: 'prep/' + p.f + '.jpg', pname: p.n }); });
+var TYPES = { prep: 'Foto preparat', id: 'Tunjuk label slide', img: 'Gambar: apa ini?', leg: 'Nomor pada gambar', konsep: 'Konsep (isian)', past: 'Soal tahun lalu' };
 function isImg(q) { return !!(q.slide || q.pimg); }
 
 /* ---------- pencocokan jawaban (toleran ejaan) ---------- */
@@ -74,7 +75,8 @@ function grade(q, input) {
   var th = q.lenient ? 0.72 : 0.8, s = 0;
   if (q.k && q.k.length) {
     var ok = 0;
-    q.k.forEach(function (g) { if (g.some(function (syn) { return phrase(syn, U, th, 3) >= 0.99; })) ok++; });
+    var low = String(input || '').toLowerCase();
+    q.k.forEach(function (g) { if (g.some(function (syn) { return norm(syn).length ? phrase(syn, U, th, 3) >= 0.99 : low.indexOf(syn.toLowerCase()) >= 0; })) ok++; });
     s = ok / q.k.length;
   } else {
     var c = (q.al && q.al.length) ? q.al.slice() : [];
@@ -181,7 +183,7 @@ function renderHome() {
     '<div class="row" style="margin-top:16px"><button class="btn pri big" data-go="simulasi">Mulai simulasi 25 soal</button><button class="btn big" data-go="latihan">Latihan per materi</button><button class="btn big" data-go="tahun-lalu">Soal tahun lalu</button></div></div>' +
     '<div class="card"><h3 style="margin-top:0">Cara pakai malam ini</h3><ol class="rules"><li><b class="n">1</b><span>Baca <b>Ringkasan</b> materi prioritas di tab Pelajari.</span></li><li><b class="n">2</b><span>Kerjakan <b>Soal Tahun Lalu</b>. Pola soalnya hampir pasti berulang.</span></li><li><b class="n">3</b><span><b>Latihan</b> tunjuk label. Soal yang salah akan muncul lebih sering.</span></li><li><b class="n">4</b><span>Tutup dengan <b>Simulasi OSPE</b> berwaktu. Pilih mode kertas supaya terbiasa menulis tangan.</span></li></ol></div></section>' +
     '<h2>8 materi praktikum</h2><p class="lead small">Progres tersimpan di browser ini saja.</p><div class="grid g-cards" style="margin-top:12px">' + cards + '</div>' +
-    '<p class="note" style="margin-top:22px">Sumber: slide praktikum dosen (Ossa Cranialis, Anatomi Syaraf II, Nonne & Pandy, Histologi Syaraf, Histopatologi Persyarafan, Osteologi & Arthrologi, Myologi, Histologi Muskuloskeletal, Fisiologi), Buku Panduan Praktikum Semester VII, soal UTS 21 & UTS 2025. Kunci jawaban label diambil dari teks slide (dibaca otomatis); kalau ada ejaan aneh, percayai label asli yang muncul saat jawaban dibuka.</p>';
+    '<p class="note" style="margin-top:22px">Sumber: slide praktikum dosen (Ossa Cranialis, Anatomi Syaraf II, Nonne & Pandy, Histologi Syaraf, Histopatologi Persyarafan, Osteologi & Arthrologi, Myologi, Histologi Muskuloskeletal, Fisiologi), 20 foto preparat histologi dari praktikum, Buku Panduan Praktikum Semester VII, soal UTS 21 & UTS 2025. Kunci jawaban label diambil dari teks slide (dibaca otomatis); kalau ada ejaan aneh, percayai label asli yang muncul saat jawaban dibuka.</p>';
   $app.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go(b.getAttribute('data-go')); }); });
   $app.querySelectorAll('[data-m]').forEach(function (b) { b.addEventListener('click', function () { view.mat = b.getAttribute('data-m'); view.sub = 'ringkasan'; go('pelajari'); }); });
 }
@@ -193,7 +195,11 @@ function renderLearn() {
   var nSlides = m.decks.reduce(function (a, d) { return a + G.SLIDES[d].n; }, 0);
   var nKon = KON.filter(function (k) { return k.m === m.id; }).length;
   var nImg = Q.filter(function (q) { return q.m === m.id && (q.type === 'img' || q.type === 'leg'); }).length;
-  var subs = [['ringkasan', 'Ringkasan'], ['slide', 'Slide (' + nSlides + ')'], ['konsep', 'Soal konsep (' + nKon + ')'], ['gambar', 'Soal gambar (' + nImg + ')']];
+  var nPrep = Q.filter(function (q) { return q.m === m.id && q.type === 'prep'; }).length;
+  var subs = [['ringkasan', 'Ringkasan'], ['slide', 'Slide (' + nSlides + ')']];
+  if (nPrep) subs.push(['preparat', 'Foto preparat (' + nPrep + ')']);
+  subs.push(['konsep', 'Soal konsep (' + nKon + ')'], ['gambar', 'Soal gambar (' + nImg + ')']);
+  if (view.sub === 'preparat' && !nPrep) view.sub = 'ringkasan';
   var h = '<div class="row" style="gap:6px">' + chips + '</div>' +
     '<div style="margin-top:18px"><span class="tag eo">Praktikum ' + m.no + '</span><h1 style="margin-top:6px">' + esc(m.title) + '</h1><p class="lead">' + esc(m.sub) + '. Sumber: ' + esc(m.dosen) + '.</p></div>' +
     '<div class="subtabs">' + subs.map(function (s) { return '<button class="chip' + (view.sub === s[0] ? ' on' : '') + '" data-sub="' + s[0] + '">' + s[1] + '</button>'; }).join('') +
@@ -223,6 +229,20 @@ function renderLearn() {
       return '<details class="qa"><summary>' + esc(q.q) + '</summary><div class="a"><div class="key">' + esc(q.a) + '</div>' + (q.x ? '<div class="small muted" style="margin-top:4px">' + esc(q.x) + '</div>' : '') + (q.ref ? '<button class="btn sm ghost" style="margin-top:6px" data-sl="' + q.ref + '">Lihat slide terkait</button>' : '') + '</div></details>';
     }).join('') + '</div>';
     $s.querySelectorAll('[data-sl]').forEach(function (b) { b.addEventListener('click', function () { openViewer(b.getAttribute('data-sl')); }); });
+  } else if (view.sub === 'preparat') {
+    var pr = Q.filter(function (q) { return q.m === m.id && q.type === 'prep'; });
+    $s.innerHTML = '<p class="note">Foto preparat dari praktikum. Tebak dulu jaringannya, lalu buka jawaban untuk melihat ciri pembedanya. Semua foto ini juga muncul sebagai soal di Latihan dan Simulasi.</p><div class="row" style="margin:8px 0 12px"><button class="btn pri sm" data-trainprep>Latihan foto preparat (' + pr.length + ')</button></div><div class="pastgrid">' + pr.map(function (q, i) {
+      return '<div class="card"><b class="timer" style="font-size:1rem">Foto ' + (i + 1) + '</b><div style="margin-top:8px"><img src="img/' + q.pimg + '" alt="Foto preparat ' + (i + 1) + '" loading="lazy" style="border-radius:8px;border:1px solid var(--line);cursor:zoom-in" data-zoomprep="' + i + '"></div><details class="qa" style="margin-top:10px"><summary>Lihat jawaban</summary><div class="a"><div class="key">' + esc(q.a) + '</div><div class="small muted" style="margin-top:4px">' + esc(q.x) + '</div></div></details></div>';
+    }).join('') + '</div>';
+    $s.querySelector('[data-trainprep]').addEventListener('click', function () { startSession('lat', shuffle(pr.slice()), 'Foto preparat histologi'); });
+    $s.querySelectorAll('[data-zoomprep]').forEach(function (im) { im.addEventListener('click', function () {
+      var q = pr[+im.getAttribute('data-zoomprep')];
+      $modal.innerHTML = '<div class="modal" role="dialog" aria-modal="true"><div class="box"><div class="qhead"><b>Foto preparat</b><div class="row"><button class="btn sm" data-zoombtn>Perbesar</button><button class="btn sm pri" data-close>Tutup</button></div></div>' + zoomBox('<div class="fig"><img src="img/' + q.pimg + '" alt="Foto preparat"></div>') + '<details class="qa"><summary>Lihat jawaban</summary><div class="a"><div class="key">' + esc(q.a) + '</div><div class="small muted">' + esc(q.x) + '</div></div></details></div></div>';
+      var root = $modal.firstChild; bindZoom(root);
+      root.querySelector('[data-close]').addEventListener('click', closeModal);
+      root.addEventListener('click', function (e) { if (e.target === root) closeModal(); });
+      document.onkeydown = function (e) { if (e.key === 'Escape') closeModal(); };
+    }); });
   } else {
     var gi = Q.filter(function (q) { return q.m === m.id && (q.type === 'img' || q.type === 'leg'); });
     $s.innerHTML = gi.length ? '<div class="pastgrid">' + gi.map(function (q) {
@@ -267,7 +287,7 @@ openViewer.hide = true;
 function closeModal() { $modal.innerHTML = ''; document.onkeydown = null; }
 
 /* ---------- Latihan ---------- */
-var setup = { mats: PRIO.slice(), types: ['id', 'img', 'leg', 'konsep', 'past'], n: 20 };
+var setup = { mats: PRIO.slice(), types: ['prep', 'id', 'img', 'leg', 'konsep', 'past'], n: 20 };
 var sess = null;
 function poolFor(mats, types) { return Q.filter(function (q) { return mats.indexOf(q.m) >= 0 && types.indexOf(q.type) >= 0; }); }
 function renderPracticeSetup() {
@@ -312,6 +332,7 @@ function startSession(kind, list, title) {
 function mtag(q) { var m = MID[q.m]; return '<span class="tag">' + (m ? 'Prak. ' + m.no + ' · ' + esc(m.title) : '') + '</span> <span class="tag eo">' + TYPES[q.type] + (q.set ? ' · ' + q.set + ' no. ' + q.no : '') + '</span>'; }
 function srcLine(q) {
   if (q.slide) return '<div class="note">Sumber: ' + esc(DN[deckOf(q.slide)]) + ', slide ' + slideNo(q.slide) + '</div>';
+  if (q.type === 'prep') return '<div class="note">Foto preparat dari praktikum</div>';
   if (q.pimg) return '<div class="note">Gambar dari soal ' + esc(q.set) + '</div>';
   return '';
 }
