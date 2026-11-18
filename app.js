@@ -6,7 +6,7 @@ var PRIO = ['m5', 'm6', 'm7', 'm4', 'm1', 'm2'];
 var $app = document.getElementById('app'), $modal = document.getElementById('modal');
 
 /* ---------- penyimpanan (per browser) ---------- */
-var KEY = 'ospe-uts-v1';
+var KEY = 'ospe-uts-v2';
 var store = { stats: {}, prefs: { mode: 'ketik', paper: false } };
 try { var raw = localStorage.getItem(KEY); if (raw) { var p = JSON.parse(raw); store.stats = p.stats || {}; store.prefs = Object.assign(store.prefs, p.prefs || {}); } } catch (e) {}
 function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
@@ -21,7 +21,7 @@ G.LEG.forEach(function (g) { add({ id: g.id, type: 'leg', m: g.m, q: g.q, a: g.a
 Object.keys(G.IDL).forEach(function (s) {
   var deck = s.split('-')[0], m = G.DECK2M[deck];
   G.IDL[s].forEach(function (l, i) {
-    if (l.a) add({ id: 'i-' + s + '-' + i, type: 'id', m: m, slide: s, li: i, q: 'Sebutkan nama struktur yang ditunjuk nomor ' + (i + 1) + ' (kotak merah muda).', a: l.t, al: [l.t], lenient: true });
+    if (l.a) add({ id: 'i-' + s + '-' + i, type: 'id', m: m, slide: s, li: i, q: 'Sebutkan nama struktur yang ditunjuk nomor ' + (i + 1) + ' (kotak merah muda).', a: l.c || l.t, al: l.syn || [l.t], lenient: true, x: l.c && l.c.toLowerCase() !== l.t.toLowerCase() ? 'Tulisan pada slide: ' + l.t : '' });
   });
 });
 (window.PREP || []).forEach(function (p, i) { add({ id: 'f-' + p.f, type: 'prep', m: 'm7', q: 'Foto preparat praktikum: jaringan/preparat apa yang tampak?', a: p.a, al: p.al, k: p.k, x: p.x, pimg: 'prep/' + p.f + '.jpg', pname: p.n }); });
