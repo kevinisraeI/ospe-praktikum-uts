@@ -211,6 +211,7 @@ function renderLearn() {
   var $s = document.getElementById('sub');
   if (view.sub === 'ringkasan') {
     $s.innerHTML = '<div class="card summary">' + SUM[m.id].replace(/<table>/g, '<div class="tblwrap"><table>').replace(/<\/table>/g, '</table></div>') + '</div>';
+    decorateSummary($s.querySelector('.summary'), m.id);
   } else if (view.sub === 'slide') {
     var sh = '';
     m.decks.forEach(function (d) {
@@ -250,6 +251,34 @@ function renderLearn() {
     }).join('') + '</div>' : '<div class="empty">Belum ada soal gambar untuk materi ini.</div>';
     bindMasks($s);
   }
+}
+
+
+/* gambar per subbab ringkasan */
+function imgInfo(k) {
+  if (k.indexOf('wan/') === 0) return { src: 'img/' + k + '.jpg', cap: (window.WANCAP || {})[k] || 'Slide kuliah' };
+  if (k.indexOf('prep/') === 0) { var f = k.slice(5), p = (window.PREP || []).filter(function (x) { return x.f === f; })[0]; return { src: 'img/' + k + '.jpg', cap: 'Foto preparat praktikum: ' + (p ? p.n : '') }; }
+  var t = (G.TITLES || {})[k];
+  return { src: slideSrc(k), cap: (DN[deckOf(k)] || '') + ' · slide ' + slideNo(k) + (t ? ' · ' + t : ''), slide: k };
+}
+function openImg(info) {
+  $modal.innerHTML = '<div class="modal" role="dialog" aria-modal="true"><div class="box"><div class="qhead"><b>' + esc(info.cap) + '</b><div class="row"><button class="btn sm" data-zoombtn>Perbesar</button><button class="btn sm pri" data-close>Tutup</button></div></div>' + zoomBox('<div class="fig"><img src="' + info.src + '" alt=""></div>') + '</div></div>';
+  var root = $modal.firstChild; bindZoom(root);
+  root.querySelector('[data-close]').addEventListener('click', closeModal);
+  root.addEventListener('click', function (e) { if (e.target === root) closeModal(); });
+  document.onkeydown = function (e) { if (e.key === 'Escape') closeModal(); };
+}
+function decorateSummary(root, mid) {
+  var map = (window.SECIMG || {})[mid]; if (!map || !root) return;
+  root.querySelectorAll('h3').forEach(function (h) {
+    var t = h.textContent.trim(), ent = map.filter(function (e) { return t.indexOf(e[0]) === 0; })[0];
+    if (!ent) return;
+    var end = h; while (end.nextElementSibling && end.nextElementSibling.tagName !== 'H3') end = end.nextElementSibling;
+    var strip = document.createElement('div'); strip.className = 'figstrip';
+    strip.innerHTML = ent[1].map(function (k) { var i = imgInfo(k); return '<button class="fthumb" data-fk="' + k + '" title="Klik untuk memperbesar"><img src="' + i.src + '" alt="" loading="lazy"><span>' + esc(i.cap) + '</span></button>'; }).join('');
+    end.parentNode.insertBefore(strip, end.nextSibling);
+  });
+  root.querySelectorAll('[data-fk]').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-fk'), i = imgInfo(k); if (i.slide) { openViewer.hide = false; openViewer(k); } else openImg(i); }); });
 }
 
 /* viewer slide */

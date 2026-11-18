@@ -709,3 +709,63 @@ window.PREP = [
 {f:'p19',n:'Rectoanal junction',a:'Rectoanal junction',al:['rectoanal junction','anorectal junction','rektoanal','peralihan rektum anus','anorektal'],x:'Peralihan epitel rektum (selapis silindris dengan kripta) ke anus (berlapis gepeng), dengan lapisan otot di bawahnya.'},
 {f:'p20',n:'Tulang (sediaan gosok, melintang)',a:'Tulang kompakta: osteon (sistem Havers)',al:['osteon','sistem havers','tulang kompakta','tulang','haversian'],x:'Potongan melintang: kanal Havers gelap di tengah, lamela konsentris, lakuna berisi osteosit, dan kanalikuli yang memancar.'}
 ];
+
+/* ====== Gambar per subbab ringkasan (slide praktikum, slide kuliah dr. Wan, foto preparat) ====== */
+window.WANCAP = {
+ 'wan/neuro-6':'Kuliah Neuroanatomi (dr. Wan) · lapisan scalp', 'wan/neuro-86':'Kuliah Neuroanatomi · sinus duramatris', 'wan/neuro-88':'Kuliah Neuroanatomi · arachnoid mater & granulatio', 'wan/neuro-89':'Kuliah Neuroanatomi · perdarahan epidural, subdural, subarachnoid',
+ 'wan/neuro-90':'Kuliah Neuroanatomi · CT scan perdarahan intrakranial', 'wan/neuro-91':'Kuliah Neuroanatomi · cisterna', 'wan/neuro-93':'Kuliah Neuroanatomi · sistem ventrikel & hidrosefalus',
+ 'wan/neuro-100':'Kuliah Neuroanatomi · plexus brachialis & lumbosacralis', 'wan/neuro-101':'Kuliah Neuroanatomi · plexus brachialis', 'wan/neuro-102':'Kuliah Neuroanatomi · plexus lumbalis', 'wan/neuro-125':'Kuliah Neuroanatomi · circulus Willisi & arteri otak',
+ 'wan/musc-19':'Kuliah Muskuloskeletal (dr. Wan) · os sternum', 'wan/musc-20':'Kuliah Muskuloskeletal · costa & thoracic cage', 'wan/musc-30':'Kuliah Muskuloskeletal · ossa manus', 'wan/musc-74':'Kuliah Muskuloskeletal · rotator cuff', 'wan/musc-96':'Kuliah Muskuloskeletal · trigonum femorale & paha', 'wan/musc-97':'Kuliah Muskuloskeletal · daerah gluteal'
+};
+window.SECIMG = {
+ m1: [
+  ['Lapisan kulit kepala', ['cranial-2','cranial-3','cranial-6','wan/neuro-6']],
+  ['Meninges', ['cranial-5','wan/neuro-86','wan/neuro-88','wan/neuro-89']],
+  ['Ossa cranii', ['cranial-7','cranial-8','cranial-9','cranial-11','cranial-12','cranial-13']],
+  ['Sutura', ['cranial-14','osteo-58']],
+  ['Fossa cranii', ['cranial-15','cranial-16','cranial-17','cranial-18','cranial-19','cranial-20','cranial-21','cranial-25','cranial-26']],
+  ['Mandibula', ['cranial-36','cranial-39']],
+  ['Rongga cranium', ['cranial-22','cranial-23','cranial-24','cranial-49','cranial-61','cranial-63']],
+  ['Vaskularisasi', ['wan/neuro-125']]
+ ],
+ m2: [
+  ['Pembagian SSP', ['saraf2-2','saraf2-4']],
+  ['Cerebrum', ['saraf2-5','saraf2-6']],
+  ['Diencephalon', ['saraf2-7','saraf2-8','saraf2-9']],
+  ['Batang otak', ['saraf2-11','saraf2-12','saraf2-14','saraf2-15','saraf2-16','saraf2-17','saraf2-18','saraf2-21','saraf2-22']],
+  ['Cerebellum', ['saraf2-10']],
+  ['Ventrikel', ['saraf2-19','saraf2-20','saraf2-28','saraf2-29','saraf2-30','wan/neuro-91','wan/neuro-93']],
+  ['Ganglia basalis', ['saraf2-32','saraf2-33','saraf2-34']],
+  ['Sistem limbik', ['saraf2-36']],
+  ['Medulla spinalis', ['saraf2-25','saraf2-26','saraf2-27','saraf2-37','saraf2-38','saraf2-39','saraf2-40','saraf2-41','saraf2-42','saraf2-43','saraf2-44','wan/neuro-100','wan/neuro-101','wan/neuro-102']]
+ ],
+ m4: [
+  ['Neuron', ['histosaraf-3','histosaraf-4','histosaraf-5','histosaraf-6']],
+  ['Sel glia', ['histosaraf-7','histosaraf-8','histosaraf-9','histosaraf-10']],
+  ['Cerebrum: 6', ['histosaraf-14','histosaraf-15','histosaraf-16']],
+  ['Cerebellum: 3', ['histosaraf-19','histosaraf-20','histosaraf-21','histosaraf-22']],
+  ['Medula spinalis', ['histosaraf-26','histosaraf-27','histosaraf-28','histosaraf-29']],
+  ['Saraf tepi', ['histosaraf-31']],
+  ['Histopatologi: trauma', ['histopato-2','histopato-3','histopato-4','histopato-5','wan/neuro-89','wan/neuro-90']],
+  ['Histopatologi: infeksi', ['histopato-7','histopato-8','histopato-9','histopato-10','histopato-11','histopato-12','histopato-13','histopato-14','histopato-15','histopato-16']],
+  ['Histopatologi: tumor', ['histopato-18','histopato-19','histopato-20','histopato-21','histopato-22','histopato-23','histopato-24','histopato-25','histopato-26','histopato-27']]
+ ],
+ m5: [
+  ['Penggolongan tulang', ['osteo-3','osteo-8']],
+  ['Vertebra', ['osteo-10','osteo-11','osteo-14','osteo-15','osteo-16','osteo-17','osteo-18','osteo-19']],
+  ['Sternum', ['osteo-21','osteo-23','osteo-24','wan/musc-19','wan/musc-20']],
+  ['Ekstremitas superior', ['osteo-26','osteo-28','osteo-30','osteo-32','osteo-33','osteo-34','osteo-36','osteo-38','osteo-39','osteo-40','osteo-41','wan/musc-30']],
+  ['Ekstremitas inferior', ['osteo-43','osteo-45','osteo-46','osteo-48','osteo-50','osteo-53','osteo-54','osteo-55']],
+  ['Arthrologi', ['osteo-58','osteo-59','osteo-61','osteo-62','osteo-63','osteo-66','osteo-67','osteo-68','osteo-69','osteo-70','osteo-71','osteo-72']]
+ ],
+ m6: [
+  ['Prinsip', ['myo-3']],
+  ['Ekstremitas superior', ['myo-6','myo-7','myo-8','myo-9','myo-11','myo-13','myo-14','myo-16','myo-19','myo-21','wan/musc-74']],
+  ['Ekstremitas inferior', ['myo-23','myo-24','myo-26','myo-27','myo-28','myo-30','myo-31','myo-32','myo-34','myo-35','myo-36','myo-39','myo-40','myo-41','myo-42','wan/musc-96','wan/musc-97']]
+ ],
+ m7: [
+  ['Sel-sel tulang', ['histomusculo-4','histomusculo-5','histomusculo-6','histomusculo-7','histomusculo-8','histomusculo-9','histomusculo-10','histomusculo-11','histomusculo-12','prep/p8','prep/p9','prep/p10','prep/p20']],
+  ['Kartilago', ['histomusculo-13','histomusculo-14','histomusculo-15','histomusculo-16','prep/p1','prep/p3','prep/p4','prep/p14']],
+  ['Otot', ['histomusculo-17','histomusculo-18','histomusculo-19','histomusculo-20','histomusculo-21','histomusculo-22','histomusculo-23','histomusculo-24','histomusculo-25','histomusculo-26','histomusculo-27','histomusculo-28','prep/p5','prep/p7','prep/p17']]
+ ]
+};
