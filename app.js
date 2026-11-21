@@ -15,7 +15,7 @@ function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catc
 var Q = [], QID = {};
 function add(q) { Q.push(q); QID[q.id] = q; }
 KON.forEach(function (k, i) { add({ id: 'k' + i, type: 'konsep', m: k.m, q: k.q, a: k.a, al: k.al, k: k.k, x: k.x, ref: k.r }); });
-PAST.forEach(function (p) { add({ id: 'p' + (p.set === 'UTS 2025' ? '25-' : '21-') + p.no, type: 'past', set: p.set, no: p.no, m: p.m, q: p.q, a: p.a, al: p.al, k: p.k, x: p.x, pimg: p.img }); });
+PAST.forEach(function (p) { add({ id: 'p' + (p.set === 'UTS 2025' ? '25-' : p.set === 'UTS 21' ? '21-' : '26-') + p.no, type: 'past', set: p.set, no: p.no, m: p.m, q: p.q, a: p.a, al: p.al, k: p.k, x: p.x, pimg: p.img }); });
 G.IMGQ.forEach(function (g) { add({ id: g.id, type: 'img', m: g.m, q: g.q, a: g.a, al: g.al, k: g.k, slide: g.img, mask: g.mask }); });
 G.LEG.forEach(function (g) { add({ id: g.id, type: 'leg', m: g.m, q: g.q, a: g.a, al: g.al, slide: g.img, mask: g.mask }); });
 Object.keys(G.IDL).forEach(function (s) {
@@ -183,7 +183,7 @@ function renderHome() {
     '<div class="row" style="margin-top:16px"><button class="btn pri big" data-go="simulasi">Mulai simulasi 25 soal</button><button class="btn big" data-go="latihan">Latihan per materi</button><button class="btn big" data-go="tahun-lalu">Soal tahun lalu</button></div></div>' +
     '<div class="card"><h3 style="margin-top:0">Cara pakai malam ini</h3><ol class="rules"><li><b class="n">1</b><span>Baca <b>Ringkasan</b> materi prioritas di tab Pelajari.</span></li><li><b class="n">2</b><span>Kerjakan <b>Soal Tahun Lalu</b>. Pola soalnya hampir pasti berulang.</span></li><li><b class="n">3</b><span><b>Latihan</b> tunjuk label. Soal yang salah akan muncul lebih sering.</span></li><li><b class="n">4</b><span>Tutup dengan <b>Simulasi OSPE</b> berwaktu. Pilih mode kertas supaya terbiasa menulis tangan.</span></li></ol></div></section>' +
     '<h2>8 materi praktikum</h2><p class="lead small">Progres tersimpan di browser ini saja.</p><div class="grid g-cards" style="margin-top:12px">' + cards + '</div>' +
-    '<p class="note" style="margin-top:22px">Sumber: slide praktikum dosen (Ossa Cranialis, Anatomi Syaraf II, Nonne & Pandy, Histologi Syaraf, Histopatologi Persyarafan, Osteologi & Arthrologi, Myologi, Histologi Muskuloskeletal, Fisiologi), 20 foto preparat histologi dari praktikum, Buku Panduan Praktikum Semester VII, soal UTS 21 & UTS 2025. Kunci jawaban label diambil dari teks slide (dibaca otomatis); kalau ada ejaan aneh, percayai label asli yang muncul saat jawaban dibuka.</p>';
+    '<p class="note" style="margin-top:22px">Sumber: slide praktikum dosen (Ossa Cranialis, Anatomi Syaraf II, Nonne & Pandy, Histologi Syaraf, Histopatologi Persyarafan, Osteologi & Arthrologi, Myologi, Histologi Muskuloskeletal, Fisiologi), 20 foto preparat histologi dari praktikum, Buku Panduan Praktikum Semester VII, soal UTS 21, UTS 2025 & UTS 2026. Kunci jawaban label diambil dari teks slide (dibaca otomatis); kalau ada ejaan aneh, percayai label asli yang muncul saat jawaban dibuka.</p>';
   $app.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go(b.getAttribute('data-go')); }); });
   $app.querySelectorAll('[data-m]').forEach(function (b) { b.addEventListener('click', function () { view.mat = b.getAttribute('data-m'); view.sub = 'ringkasan'; go('pelajari'); }); });
 }
@@ -451,10 +451,11 @@ function renderSimSetup() {
   $app.innerHTML = '<h1>Simulasi OSPE</h1><p class="lead">25 soal acak dari 8 materi (±3 soal per materi, kebanyakan bergambar seperti slide ujian). Tiap soal 60 detik dan pindah otomatis saat waktu habis. Tidak ada kunci sampai selesai.</p>' +
     '<div class="card setup" style="margin-top:16px"><div><span class="lbl">Cara menjawab</span><div class="seg"><button data-pp="0" class="' + (!store.prefs.paper ? 'on' : '') + '">Ketik di sini</button><button data-pp="1" class="' + (store.prefs.paper ? 'on' : '') + '">Tulis di kertas (seperti ujian)</button></div>' +
     '<p class="note">Mode kertas: siapkan kertas bernomor 1–25, tulis tangan, lalu nilai sendiri di halaman pembahasan.</p></div>' +
-    '<div class="row"><button class="btn pri big" data-simstart>Mulai 25 soal × 1 menit</button><button class="btn big" data-past25>Simulasi soal UTS 2025</button><button class="btn big" data-past21>Simulasi soal UTS 21</button></div></div>';
+    '<div class="row"><button class="btn pri big" data-simstart>Mulai 25 soal × 1 menit</button><button class="btn big" data-past26>Simulasi UTS 2026 (ujian kemarin)</button><button class="btn big" data-past25>Simulasi soal UTS 2025</button><button class="btn big" data-past21>Simulasi soal UTS 21</button></div></div>';
   $app.querySelectorAll('[data-pp]').forEach(function (b) { b.addEventListener('click', function () { store.prefs.paper = b.getAttribute('data-pp') === '1'; save(); renderSimSetup(); }); });
   $app.querySelector('[data-simstart]').addEventListener('click', function () { startSession('sim', simList(), 'Simulasi OSPE'); });
   $app.querySelector('[data-past25]').addEventListener('click', function () { startSession('sim', Q.filter(function (q) { return q.set === 'UTS 2025'; }), 'Simulasi UTS 2025'); });
+  $app.querySelector('[data-past26]').addEventListener('click', function () { startSession('sim', Q.filter(function (q) { return q.set === PSET26; }), 'Simulasi UTS 2026 (Prak \'23)'); });
   $app.querySelector('[data-past21]').addEventListener('click', function () { startSession('sim', shuffle(Q.filter(function (q) { return q.set === 'UTS 21'; })).slice(0, 25), 'Simulasi UTS 21 (25 acak)'); });
 }
 function renderSimCard() {
@@ -498,11 +499,12 @@ function renderSimResult() {
 }
 
 /* ---------- Soal tahun lalu ---------- */
-var pastSet = 'UTS 2025';
+var PSET26 = "UTS 2026 (Prak '23)";
+var pastSet = PSET26;
 function renderPast() {
   var items = Q.filter(function (q) { return q.set === pastSet; });
-  $app.innerHTML = '<h1>Soal tahun lalu</h1><p class="lead">UTS 2025 berasal dari ingatan kakak tingkat (isian). UTS 21 aslinya pilihan ganda dan di sini dijadikan isian seperti OSPE. Kunci sudah dicek ke slide; catatan muncul kalau kunci lama meragukan.</p>' +
-    '<div class="row" style="margin:14px 0"><div class="seg"><button data-ps="UTS 2025" class="' + (pastSet === 'UTS 2025' ? 'on' : '') + '">UTS 2025 (22)</button><button data-ps="UTS 21" class="' + (pastSet === 'UTS 21' ? 'on' : '') + '">UTS 21 (40)</button></div><button class="btn pri" data-plat>Latihan set ini</button><button class="btn" data-psim>Simulasi berwaktu</button></div>' +
+  $app.innerHTML = '<h1>Soal tahun lalu</h1><p class="lead">UTS 2026 adalah soal ujian praktikum angkatan 2023 beserta kuncinya. UTS 2025 berasal dari ingatan kakak tingkat (isian). UTS 21 aslinya pilihan ganda dan di sini dijadikan isian seperti OSPE. Kunci sudah dicek ke slide; catatan muncul kalau kunci lama meragukan.</p>' +
+    '<div class="row" style="margin:14px 0"><div class="seg">' + [PSET26, 'UTS 2025', 'UTS 21'].map(function (sn) { var n = Q.filter(function (q) { return q.set === sn; }).length; return '<button data-ps="' + esc(sn) + '" class="' + (pastSet === sn ? 'on' : '') + '">' + esc(sn) + ' (' + n + ')</button>'; }).join('') + '</div><button class="btn pri" data-plat>Latihan set ini</button><button class="btn" data-psim>Simulasi berwaktu</button></div>' +
     '<div class="pastgrid">' + items.map(function (q) {
       return '<div class="card"><div class="row" style="justify-content:space-between"><b class="timer" style="font-size:1rem">No. ' + q.no + '</b><span class="tag">' + (MID[q.m] ? 'Prak. ' + MID[q.m].no : '') + '</span></div>' + (q.pimg ? '<div style="margin-top:8px"><img src="img/' + q.pimg + '" alt="Gambar soal no. ' + q.no + '" loading="lazy" style="border-radius:8px;border:1px solid var(--line)"></div>' : '') +
         '<p style="margin:10px 0 8px;font-weight:500">' + esc(q.q) + '</p><details class="qa"><summary>Lihat jawaban</summary><div class="a"><div class="key">' + esc(q.a) + '</div>' + (q.x ? '<div class="small muted" style="margin-top:4px">' + esc(q.x) + '</div>' : '') + '</div></details></div>';
